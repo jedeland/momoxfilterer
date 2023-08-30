@@ -39,6 +39,16 @@ def get_handbags(base_url_handbag):
             # print(f"Follow up link is https://www.momoxfashion.com{link['href']}")
             list_of_items.append(f"https://www.momoxfashion.com{link['href']}")
     print(list_of_items)
+    return list_of_items
+
+
+def get_valid_items(min_b, max_b, min_h, max_h, items_to_search):
+    print()
+    headers = { 
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
+    }
+    base_page = requests.get(base_url_handbag, headers=headers)
+    soup = BeautifulSoup(base_page.content, 'html.parser')
 
 
 if "__main__" == __name__:
@@ -49,10 +59,15 @@ if "__main__" == __name__:
     base_url_handbag = 'https://www.momoxfashion.com/de/damen/accessoires/handtaschen?zustand=Neuwertig_Sehr%20gut'    
     print("Starting scraper!")
     num_pages = get_handbag_pages(base_url_handbag)
+    list_of_links = []
     for i in range(1, num_pages):
         time.sleep(0.15)
-        get_handbags(f"{base_url_handbag}&seite={i}")
-    # get_handbags()
+        list_of_links.append(get_handbags(f"{base_url_handbag}&seite={i}"))
+    g = 0
+    for items in list_of_links:
+        print(g + 1, items)
+        g = g + 1 
+        #get_valid_items(min_breite, max_breite, min_hohe, max_hohe, items)
     # input_val = input("1: handbags\n2: backpacks\n")
     # print(int(input_val) < 3)
     # if int(input_val) > 0 & int(input_val) < 3:
