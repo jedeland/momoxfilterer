@@ -84,7 +84,7 @@ if "__main__" == __name__:
     max_breite = 41
     min_hohe = 22
     max_hohe = 26
-    base_url_handbag = 'https://www.momoxfashion.com/de/damen/accessoires/handtaschen?farbe=bunt_gruen_rot_blau_beige_tuerkis_grau_orange_schwarz_braun_weiss&zustand=Neuwertig_Sehr%20gut&von=6&bis=85'    
+    base_url_handbag = 'https://www.momoxfashion.com/de/damen/accessoires/handtaschen?farbe=bunt_gruen_rot_blau_beige_tuerkis_grau_orange_schwarz_braun_weiss&material=baumwolle_leder_kunstleder&zustand=Neuwertig_Sehr%20gut&von=6&bis=85'    
     print("Starting scraper!")
     num_pages = get_handbag_pages(base_url_handbag)
     list_of_links = []
