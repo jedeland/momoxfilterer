@@ -55,19 +55,28 @@ def get_valid_items(min_b, max_b, min_h, max_h, item_to_search, result_num):
         height = values.find('td', {"id": "detail-value-Höhe"})
         width = values.find('td', {"id": "detail-value-Breite"})
         if int(height.text.strip().replace("cm", "")) >= min_h and int(height.text.strip().replace("cm", "")) <= max_h and int(width.text.strip().replace("cm", "")) >= min_b and int(height.text.strip().replace("cm", "")) <= max_b:
-            
+            price = soup.find('span', {'class': 'price'})
+            brand = soup.find('a', {'class': 'brand-name'})
+            # print('price is ', price)
             result_num = result_num + 1
             # print(f"Df: {df}\nConcat: {pd.concat([df, new_row], ignore_index=True)}",)
 
             new_row = pd.DataFrame({"name": [item_to_search.split("/p/")[-1]],
+                                    "brand": [brand.text.strip()],
                                     "link": [item_to_search], 
                                     "height": [height.text.strip().replace("cm", "")],
-                                    "width": [width.text.strip().replace("cm", "")]})
+                                    "width": [width.text.strip().replace("cm", "")],
+                                    "price": [price.text.strip()]})
+            print(f"""Item found: {item_to_search}
+                  Brand: {brand.text.strip()}
+                  Height: {height.text.strip()}
+                  Width: {width.text.strip()}
+                  Price: {price.text.strip()}""")
             return new_row
             # print(f"Df: {df}\nConcat: {pd.concat([df, new_row], ignore_index=True)}",)
             # df = pd.concat([df, new_row], ignore_index=True)
             # print(f"Df: {df}\nConcat: {pd.concat([df, new_row], ignore_index=True)}",)
-            # print(f"Item found: {item_to_search}\nHeight: {height.text.strip()}\nWidth: {width.text.strip()}")
+            
 
 
 if "__main__" == __name__:
@@ -84,15 +93,16 @@ if "__main__" == __name__:
         list_of_links.append(get_handbags(f"{base_url_handbag}&seite={i}"))
     g = 0
     results_counter = 0
-    df = pd.DataFrame(data=None, columns=["name", "link", "height", "width"])
+    df = pd.DataFrame(data=None, columns=["name", "brand", "link", "height", "width", "price"])
     for items in list_of_links:
         # print(g + 1, items)
-        for item in items: 
+        for count, item in enumerate(items, start=1): 
             # print('Item is ' , item)
-            print(f"Df: {df}")
+            if count % 25 == 0:
+                print(f"Df: {df}")
             df = pd.concat([df, get_valid_items(min_breite, max_breite, min_hohe, max_hohe, item, results_counter
                                                 )], ignore_index=True)
-            print(f"Concat: {df}")
+            # print(f"Concat: {df}")
     print("Number of results ", results_counter)
     print(df)
     df.to_excel("scraperoutput.xlsx", engine='xlsxwriter')
